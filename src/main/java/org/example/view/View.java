@@ -1,5 +1,8 @@
 package org.example.view;
 
+import org.example.dto.PostStatisticsDto;
+import org.example.dto.StatisticsStore;
+
 import java.io.File;
 import java.util.List;
 
@@ -9,6 +12,14 @@ public class View {
     public final String SUCCESS_STATISTICS_MESSAGE = String.format("Успішно створено файл зі статистикою за атрибутом ");
     private final String FILE_LOCATION = "Розташування файлу: ";
     public final String FILE_CONTENT = "\nВміст файлу: ";
+    public final String STATISTICS = "\nСформована статистика: ";
+    public final String MENU = """
+                Введіть: 
+                1 - переглянути статистику
+                2 - переглянути створений файл 
+                
+                0 - вихід""";
+    public final String WRONG_INPUT = "Невірний ввід. Спробуйте ще раз";
 
     public void printSuccessParsingMessage(String filePath){
         System.out.println(SUCCESS_PARSING_MESSAGE + " " + filePath);
@@ -26,6 +37,18 @@ public class View {
         System.out.println(FILE_CONTENT);
         fileContent.stream().forEach(System.out::println);
     }
+
+    public void printPostStatisticsDto(StatisticsStore fileContent){
+        List<PostStatisticsDto> items = fileContent.getPosts();
+        System.out.println(STATISTICS);
+        items.stream().forEach(System.out::println);
+    }
+
+    public void showMessage(String message) {
+        System.out.println(message);
+    }
+
+
 
 
 }

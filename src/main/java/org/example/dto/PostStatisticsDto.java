@@ -4,14 +4,12 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 @XmlRootElement()
 @XmlAccessorType(XmlAccessType.FIELD)
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostStatisticsDto {
@@ -21,4 +19,8 @@ public class PostStatisticsDto {
     @XmlElement
     private int count;
 
+    @Override
+    public String toString() {
+        return value + " = " + count;
+    }
 }

@@ -6,12 +6,15 @@ import org.apache.logging.log4j.Logger;
 import org.example.dto.PostStatisticsDto;
 import org.example.dto.StatisticsStore;
 import org.example.service.parsers.RawTextReader;
+import org.example.service.parsers.XmlStatisticsReader;
 import org.example.service.parsers.XmlStatisticsWriter;
 import org.example.service.statistics.ParallelStatisticsRunner;
 import org.example.util.ParametersValidator;
+import org.example.util.ViewUtility;
 import org.example.view.View;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +35,7 @@ public class PostStatisticsController {
         this.view = view;
     }
 
-    public void launchStatisticsGeneration(String[] args){
+    public void launchStatisticsGeneration(String[] args) {
         if(!parametersValidator.hasRequiredArgsCount(args)) return;
 
         folderPath = args[0];
@@ -54,7 +57,7 @@ public class PostStatisticsController {
         writeToXmlFile(statisticsStore, relativePathGeneratedXml);
 
         view.printSuccessMessage(attribute);
-        view.printXmlFileContent(new RawTextReader().getRawTextFromXml(relativePathGeneratedXml));
+        showStatistics(relativePathGeneratedXml);
     }
 
     private void writeToXmlFile(StatisticsStore statisticsStore, String attribute) {
@@ -67,7 +70,7 @@ public class PostStatisticsController {
         }
     }
 
-    public List<PostStatisticsDto> getPostStatisticsDtoList(ParallelStatisticsRunner runner, List<File> jsonFiles){
+    private List<PostStatisticsDto> getPostStatisticsDtoList(ParallelStatisticsRunner runner, List<File> jsonFiles){
         List<PostStatisticsDto> postStatisticsDtoList = new ArrayList<PostStatisticsDto>();
         try {
             postStatisticsDtoList = runner.runParallelParsing(jsonFiles, attribute, 2);
@@ -82,7 +85,7 @@ public class PostStatisticsController {
     }
 
 
-    public List<File> findJsonFiles(File directory) {
+    private List<File> findJsonFiles(File directory) {
 
         File[] files = directory.listFiles((dir, name) -> name.toLowerCase().endsWith(".json"));
 
@@ -91,6 +94,26 @@ public class PostStatisticsController {
         }
 
         return Arrays.asList(files);
+    }
+
+    private void showStatistics(String pathToFile){
+        int item = ViewUtility.chooseItemFromMenu(view);
+
+        if(item == 1) {
+            try {
+                view.printPostStatisticsDto(new XmlStatisticsReader().readFromXmlFile(pathToFile));
+            } catch (JAXBException e) {
+                log.error("Помилка анмаршалінгу! Не вдалось прочитати дані з .xml файлу", e);
+                System.exit(1);
+            } catch (FileNotFoundException e) {
+                log.error("Статистику не знайдено", e);
+                System.exit(1);
+            }
+        } else if(item == 2) {
+            view.printXmlFileContent(new RawTextReader().getRawTextFromXml(pathToFile));
+        } else {
+            System.exit(0);
+        }
     }
 }
 
