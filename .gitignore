@@ -1,0 +1,14 @@
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Local environment
+.env
+
+src/main/resources/temp-huge-data
