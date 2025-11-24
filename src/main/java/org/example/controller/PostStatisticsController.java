@@ -62,8 +62,8 @@ public class PostStatisticsController {
         try {
             writer.writeToXmlFile(statisticsStore, attribute);
         } catch (JAXBException e) {
-
-            throw new RuntimeException(e);
+            log.error("Помилка маршалінгу! Не вдалось записати дані в .xml файл", e);
+            System.exit(1);
         }
     }
 
@@ -72,9 +72,11 @@ public class PostStatisticsController {
         try {
             postStatisticsDtoList = runner.runParallelParsing(jsonFiles, attribute, 2);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            log.error("Потік було перервано під час паралельного парсингу", e);
+            throw new RuntimeException("Парсинг перервано", e);
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            log.error("Помилка виконання під час паралельного парсингу", e.getCause());
+            throw new RuntimeException("Помилка під час парсингу", e.getCause());
         }
         return postStatisticsDtoList;
     }
