@@ -6,7 +6,7 @@
 
 Запуск з Maven:
 1) mvn clean package 
-2) mvn exec:java "-Dexec.args=src/main/resources/json-data-files category"\
+2) mvn exec:java "-Dexec.args=src/main/resources/json-data-files category"
 
 Сутності: 
 1. Post 
